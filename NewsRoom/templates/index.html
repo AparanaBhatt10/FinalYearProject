@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function myFunction() {
+  var xhttp = new XMLHttpRequest();
+  document.getElementById("summaryLabel").style.display='none';
+       document.getElementById("Summarisedtext").style.display='none';
+       const data={ "text":document.getElementById("Completetext").value
+       }
+       console.log(JSON.stringify(data))
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       // Typical action to be performed when the document is ready:
+       document.getElementById("Summarisedtext").innerHTML = xhttp.responseText;
+       document.getElementById("summaryLabel").style.display='block';
+       document.getElementById("Summarisedtext").style.display='block';
+
+
+    }
+};
+
+
+       // http.send(JSON.stringify(params)) // Make sure to stringify
+
+xhttp.open("POST", "/newsroom/summarise", true);
+xhttp.setRequestHeader('Content-type', 'application/json')
+console.log(JSON.stringify(data))
+xhttp.send(JSON.stringify(data));
+}
+
+function myFunction2() {
+  var xhttp = new XMLHttpRequest();
+  document.getElementById("keywords").innerHTML = '';
+  //document.getElementById("summaryLabel").style.display='none';
+    //   document.getElementById("Summarisedtext").style.display='none';
+       const data={ "text":document.getElementById("Summarisedtext").value
+       }
+       console.log(JSON.stringify(data))
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       // Typical action to be performed when the document is ready:
+       document.getElementById("keywords").innerHTML = xhttp.responseText;
+       //document.getElementById("summaryLabel").style.display='block';
+       //document.getElementById("Summarisedtext").style.display='block';
+
+
+    }
+};
+
+
+       // http.send(JSON.stringify(params)) // Make sure to stringify
+
+xhttp.open("POST", "/newsroom/getkeywords", true);
+xhttp.setRequestHeader('Content-type', 'application/json')
+console.log(JSON.stringify(data))
+xhttp.send(JSON.stringify(data));
+}
+
+function myFunction3() {
+  var xhttp = new XMLHttpRequest();
+  document.getElementById("images").innerHTML="";
+      // document.getElementById("Summarisedtext").style.display='none';
+       const data={ "keywords":document.getElementById("keywords").value
+       }
+       console.log(JSON.stringify(data))
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       // Typical action to be performed when the document is ready:
+       element=document.getElementById("images");
+       let text="";
+       json=JSON.parse(xhttp.responseText);
+       for(var i = 0; i < json.length; i++) {
+       var obj = json[i];
+       var img = document.createElement("img");
+       var br=document.createElement("br");
+       var ptag=document.createElement("img");
+       var div=document.createElement("div");
+       var a=document.createElement("a");
+       img.src = obj.split("####")[0]
+        console.log(obj)
+        a.href=obj.split('####')[0]
+        a.target='_blank'
+        a.innerHTML=obj.split('####')[1]
+      //  title="<div><a href="+ obj.split('####')[0]+"target='_blank'>"+obj.split('####')[1]+"</a>";
+        div.appendChild(a);
+        div.appendChild(br);
+        div.appendChild(img);
+        div.appendChild(br);
+        element.appendChild(div);
+
+
+
+        //console.log(obj.id);
+        }
+        }
+
+
+
+
+};
+
+
+       // http.send(JSON.stringify(params)) // Make sure to stringify
+
+xhttp.open("POST", "/newsroom/getImages", true);
+xhttp.setRequestHeader('Content-type', 'application/json')
+//console.log(JSON.stringify(data))
+xhttp.send(JSON.stringify(data));
+}
+</script>
+</head>
+<br>
+
+<h1>EDITOR NEWS ROOM</h1>
+
+<br>
+    <tr><td>
+        <label for="Summarisedtext" id="summaryLabel" style="display:none;"><b>Summary:</b></br></label>
+
+<textarea id="Summarisedtext" name="Summarisedtext" rows="4" cols="50" style="display:none;width:100%">
+</textarea>
+    </td>
+    </tr>
+</br>
+</br>
+    <tr><br>
+        <label for="Completetext"><b>Full News:</b></br></label>
+        <button type="button" onclick="myFunction()">Summarise</button></br>
+<textarea id="Completetext" name="Completetext" rows="4" cols="50" style="width:100%">
+
+</textarea>
+    </td>
+    </tr>
+
+</br>
+    <tr><td><br>
+        <label for="keywords"><b>keywords:</b></br></label>
+        <button type="button" onclick="myFunction2()">keywords</button></br>
+<textarea id="keywords" name="keywords" rows="4" cols="50" style="width:50%">
+
+</textarea>
+    </td></tr>
+        </br>
+    <tr><td><br>
+        <label for="images" id="imageid"><b>Related Images:</b></br></label>
+        <button type="button" onclick="myFunction3()">Related Images</button></br>
+        <div id="images"></div>
+    </td>
+    </tr>
+</table>
+</body>
+</html>
